@@ -14,7 +14,7 @@ function App() {
         setAuthenticated(true);
     }
 
-    const setLoggedAuth = () => {
+    const setLoggedOut = () => {
         setAuthenticated(false);
     }
 
@@ -31,10 +31,10 @@ function App() {
         <BrowserRouter>
             <Routes>
                 {!authenticated && <Route path="/login" element={<Login onLogin={handleLogin} />} />}
-                {authenticated && <Route path="/" element={<Home setLoggedAuth={setLoggedAuth}/>} />}
-                {authenticated && <Route path="list-measurements" element={<ListMeasurements setLoggedAuth={setLoggedAuth}/>} />}
-                {authenticated && <Route path="save-measurement" element={<SaveMeasurements setLoggedAuth={setLoggedAuth}/>} />}
-                {authenticated && <Route path="interpolate" element={<Interpolate setLoggedAuth={setLoggedAuth}/>} />}
+                {authenticated && <Route path="/" element={<Home setLoggedOut={setLoggedOut}/>} />}
+                {authenticated && <Route path="list-measurements" element={<ListMeasurements setLoggedOut={setLoggedOut}/>} />}
+                {authenticated && <Route path="save-measurement" element={<SaveMeasurements setLoggedOut={setLoggedOut}/>} />}
+                {authenticated && <Route path="interpolate" element={<Interpolate setLoggedOut={setLoggedOut}/>} />}
                 {!authenticated && <Route path="*" element={<Navigate to="/login"/>} />}
                 {authenticated && <Route path="*" element={<Navigate to="/"/>} />}
             </Routes>

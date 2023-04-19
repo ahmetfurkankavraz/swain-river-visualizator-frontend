@@ -12,7 +12,7 @@ const mapContainerStyle = {
     width: "1000px"
 }
 
-function Interpolate({setLoggedAuth}) {
+function Interpolate({setLoggedOut}) {
 
     let [dates, setDates] = useState(null);
     let [selectedDate, setSelectedDate] = useState();
@@ -36,7 +36,7 @@ function Interpolate({setLoggedAuth}) {
             })
                 .then(res => {
                     if (res.status === 401 || res.status === 403) {
-                        setLoggedAuth();
+                        setLoggedOut();
                         localStorage.removeItem('token');
                     }
                     return res.json();
@@ -45,7 +45,7 @@ function Interpolate({setLoggedAuth}) {
                     setTypes(json)  
                 })
                 .catch(error => {
-                    if (error.name !== 'AbortError') {
+                    if (error.name === "SyntaxError") {
                         alert('There was an error fetching data from the server. Please try again later.');
                     }
                 })
@@ -69,7 +69,7 @@ function Interpolate({setLoggedAuth}) {
             })
                 .then(res => {
                     if (res.status === 401 || res.status === 403) {
-                        setLoggedAuth();
+                        setLoggedOut();
                         localStorage.removeItem('token');
                     }
                     return res.json();
@@ -79,9 +79,9 @@ function Interpolate({setLoggedAuth}) {
                     setIsLoading(false);
                 })
                 .catch(error => {
-                    if (error.name !== 'AbortError') {
+                    if (error.name === 'SyntaxError') {
                         alert('There was an error fetching data from the server. Please try again later.');
-                        setLoggedAuth();
+                        setLoggedOut();
                         localStorage.removeItem('token');
                     }
                     setIsLoading(false);
@@ -104,7 +104,7 @@ function Interpolate({setLoggedAuth}) {
         })
             .then(res => {
                 if (res.status === 401 || res.status === 403) {
-                    setLoggedAuth();
+                    setLoggedOut();
                     localStorage.removeItem('token');
                 }
                 return res.json();
@@ -113,9 +113,9 @@ function Interpolate({setLoggedAuth}) {
                 setDates(json)
             })
             .catch(error => {
-                if (error.name !== 'AbortError') {
+                if (error.name === 'SyntaxError') {
                     alert('There was an error fetching data from the server. Please try again later.');
-                    setLoggedAuth();
+                    setLoggedOut();
                     localStorage.removeItem('token');
                 }
             })

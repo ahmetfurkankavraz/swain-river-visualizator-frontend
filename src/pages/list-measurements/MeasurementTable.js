@@ -4,7 +4,7 @@ import LoadingMessage from '../../components/LoadingMessage';
 
 function MeasurementTable(props){
 
-    let {setLoggedAuth} = props;
+    let {setLoggedOut} = props;
     let {clickedDevice} = props.device;
     let [measurementList, setMeasurementList] = useState(null);
     let [isListChanged, setIsListChanged] = useState(false);
@@ -24,7 +24,7 @@ function MeasurementTable(props){
             })
                 .then(res => {
                     if (res.status === 401 || res.status === 403) {
-                        setLoggedAuth();
+                        setLoggedOut();
                         localStorage.removeItem('token');
                     }
                     return res.json();
@@ -34,9 +34,9 @@ function MeasurementTable(props){
                     setIsLoading(false);
                 })
                 .catch(error => {
-                    if (error.name !== 'AbortError') {
+                    if (error.name === 'SyntaxError') {
                         alert('There was an error fetching data from the server. Please try again later.');
-                        setLoggedAuth();
+                        setLoggedOut();
                         localStorage.removeItem('token');
                     }
                     setIsLoading(false);
@@ -51,7 +51,7 @@ function MeasurementTable(props){
         })
         .then(res => {
             if (res.status === 401 || res.status === 403) {
-                setLoggedAuth();
+                setLoggedOut();
                 localStorage.removeItem('token');
             }
             return res.json();
@@ -60,9 +60,11 @@ function MeasurementTable(props){
             setIsListChanged(!isListChanged);
         })
         .catch(error => {
-            alert('There was an error fetching data from the server. Please try again later.');
-            setLoggedAuth();
-            localStorage.removeItem('token');
+            if (error.name === 'SyntaxError') {
+                alert('There was an error fetching data from the server. Please try again later.');
+                setLoggedOut();
+                localStorage.removeItem('token');
+            }
         });
     }
 

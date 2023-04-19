@@ -23,7 +23,7 @@ const options = {
       zIndex: 1
 };
 
-function SaveMeasurements({setLoggedAuth}){
+function SaveMeasurements({setLoggedOut}){
 
     let [river, setRiver] = useState(null);
     let [devices, setDevices] = useState(null);
@@ -41,7 +41,7 @@ function SaveMeasurements({setLoggedAuth}){
         })
             .then(res => {
                 if (res.status === 401 || res.status === 403) {
-                setLoggedAuth();
+                    setLoggedOut();
                 }
                 return res.json();
             })
@@ -49,9 +49,9 @@ function SaveMeasurements({setLoggedAuth}){
                 setRiver(json)
             })
             .catch(error => {
-                if (error.name !== 'AbortError') {
+                if (error.name === 'SyntaxError') {
                     alert('There was an error fetching data from the server. Please try again later.');
-                    setLoggedAuth();
+                    setLoggedOut();
                     localStorage.removeItem('token');
                 }
             })
@@ -72,7 +72,7 @@ function SaveMeasurements({setLoggedAuth}){
         })
             .then(res => {
                 if (res.status === 401 || res.status === 403) {
-                    setLoggedAuth();
+                    setLoggedOut();
                     localStorage.removeItem('token');
                 }
                 return res.json();
@@ -81,9 +81,9 @@ function SaveMeasurements({setLoggedAuth}){
                 setDevices(json)
             })
             .catch(error => {
-                if (error.name !== 'AbortError') {
+                if (error.name === 'SyntaxError') {
                     alert('There was an error fetching data from the server. Please try again later.');
-                    setLoggedAuth();
+                    setLoggedOut();
                     localStorage.removeItem('token');
                 }
             })
@@ -123,7 +123,7 @@ function SaveMeasurements({setLoggedAuth}){
                     ))} */}
 
                     {devices && devices.map(device => (
-                        <DeviceMarker key={device._id} device={device} />
+                        <DeviceMarker key={device._id} device={device} setLoggedOut={setLoggedOut} />
                     ))}
 
                 </GoogleMap>

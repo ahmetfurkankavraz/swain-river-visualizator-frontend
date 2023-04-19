@@ -15,18 +15,20 @@ function Login({ onLogin }) {
                 body: JSON.stringify({ username, password }),
             })
             .then((res) => {
-                if (!res.ok) {
+                if (res.status === 400) {
                     setErrorMessage("Invalid username or password");
-                } else {
-                    const data = res.json();
-                    const { accessToken } = data;
-                    localStorage.setItem('token', accessToken);
-                    onLogin();
-                }
+                } 
                 return res.json(); 
             })
+            .then((json) => {
+                const { accessToken } = json;
+                localStorage.setItem('token', accessToken);
+                onLogin();
+            })
             .catch(error => {
-                alert('There was an error fetching data from the server. Please try again later.');
+                if (error.name === "SyntaxError") {
+                    alert('There was an error fetching data from the server. Please try again later.');
+                }
             });
             
         } catch (error) {

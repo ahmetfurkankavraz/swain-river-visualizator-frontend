@@ -24,7 +24,7 @@ const options = {
 
 function Maps(props){
 
-    let {setClickedDevice, setLoggedAuth} = props
+    let {setClickedDevice, setLoggedOut} = props
 
     let [river, setRiver] = useState(null);
     let [devices, setDevices] = useState(null);
@@ -41,7 +41,7 @@ function Maps(props){
         })
             .then(res => {
                 if (res.status === 401 || res.status === 403) {
-                    setLoggedAuth();
+                    setLoggedOut();
                     localStorage.removeItem('token');
                 }
                 return res.json();
@@ -50,9 +50,9 @@ function Maps(props){
                 setRiver(json)
             })
             .catch(error => {
-                if (error.name !== 'AbortError') {
+                if (error.name === 'SyntaxError') {
                     alert('There was an error fetching data from the server. Please try again later.');
-                    setLoggedAuth();
+                    setLoggedOut();
                     localStorage.removeItem('token');
                 }
             })
@@ -73,7 +73,7 @@ function Maps(props){
         })
             .then(res => {
                 if (res.status === 401 || res.status === 403) {
-                    setLoggedAuth();
+                    setLoggedOut();
                     localStorage.removeItem('token');
                 }
                 return res.json();
@@ -82,9 +82,9 @@ function Maps(props){
                 setDevices(json)
             })
             .catch(error => {
-                if (error.name !== 'AbortError') {
+                if (error.name === 'SyntaxError') {
                     alert('There was an error fetching data from the server. Please try again later.');
-                    setLoggedAuth();
+                    setLoggedOut();
                     localStorage.removeItem('token');
                 }
             })

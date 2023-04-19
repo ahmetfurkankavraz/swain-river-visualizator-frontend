@@ -5,7 +5,7 @@ import MeasurementTable from './MeasurementTable';
 import Navbar from '../../components/Navbar';
 
   
-function ListMeasurements({setLoggedAuth}){
+function ListMeasurements({setLoggedOut}){
 
     let [clickedDevice, setClickedDevice] = useState(null);
 
@@ -15,12 +15,12 @@ function ListMeasurements({setLoggedAuth}){
             <Navbar/>
             <Maps
                 setClickedDevice={setClickedDevice}
-                setLoggedAuth={setLoggedAuth} />
+                setLoggedOut={setLoggedOut} />
             <MeasurementTable device={{
                 clickedDevice,
                 setClickedDevice
             }}
-            setLoggedAuth={setLoggedAuth} />
+            setLoggedOut={setLoggedOut} />
         </div>
     )
 }

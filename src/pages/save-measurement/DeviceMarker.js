@@ -9,7 +9,7 @@ function DeviceMarker(props){
     let [value, setValue] = useState(0);
     let [message, setMessage] = useState("");
 
-    const {device} = props;
+    const {setLoggedOut, device} = props;
     let [visible, setVisible] = useState(false);
 
     const handleSubmit = async (e) => {
@@ -29,9 +29,12 @@ function DeviceMarker(props){
         }).then((res) => {
             console.log(res);
             setMessage("Status Code: " + res.status + " and  " + res.statusText);
-        }).catch((err) => {
-            console.log(err);
-            alert('There was an error fetching data from the server. Please try again later.');
+        }).catch((error) => {
+            if (error.name === 'SyntaxError') {
+                alert('There was an error fetching data from the server. Please try again later.');
+                setLoggedOut();
+                localStorage.removeItem('token');
+            }
         });
     }
 
