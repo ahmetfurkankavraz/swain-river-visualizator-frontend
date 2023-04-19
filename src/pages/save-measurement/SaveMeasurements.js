@@ -50,7 +50,9 @@ function SaveMeasurements({setLoggedAuth}){
             })
             .catch(error => {
                 if (error.name !== 'AbortError') {
-                    console.error(error.message)
+                    alert('There was an error fetching data from the server. Please try again later.');
+                    setLoggedAuth();
+                    localStorage.removeItem('token');
                 }
             })
     
@@ -80,7 +82,9 @@ function SaveMeasurements({setLoggedAuth}){
             })
             .catch(error => {
                 if (error.name !== 'AbortError') {
-                    console.error(error.message)
+                    alert('There was an error fetching data from the server. Please try again later.');
+                    setLoggedAuth();
+                    localStorage.removeItem('token');
                 }
             })
     

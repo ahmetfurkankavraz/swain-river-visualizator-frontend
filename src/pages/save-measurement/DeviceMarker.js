@@ -29,6 +29,9 @@ function DeviceMarker(props){
         }).then((res) => {
             console.log(res);
             setMessage("Status Code: " + res.status + " and  " + res.statusText);
+        }).catch((err) => {
+            console.log(err);
+            alert('There was an error fetching data from the server. Please try again later.');
         });
     }
 

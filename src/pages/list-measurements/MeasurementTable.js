@@ -35,7 +35,9 @@ function MeasurementTable(props){
                 })
                 .catch(error => {
                     if (error.name !== 'AbortError') {
-                        console.error(error.message)
+                        alert('There was an error fetching data from the server. Please try again later.');
+                        setLoggedAuth();
+                        localStorage.removeItem('token');
                     }
                     setIsLoading(false);
                 })
@@ -56,6 +58,11 @@ function MeasurementTable(props){
         })
         .then(() => {
             setIsListChanged(!isListChanged);
+        })
+        .catch(error => {
+            alert('There was an error fetching data from the server. Please try again later.');
+            setLoggedAuth();
+            localStorage.removeItem('token');
         });
     }
 

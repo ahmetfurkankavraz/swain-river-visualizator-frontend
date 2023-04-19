@@ -9,22 +9,28 @@ function Login({ onLogin }) {
         event.preventDefault();
 
         try {
-            const response = await fetch("/login", {
+            fetch("/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ username, password }),
+            })
+            .then((res) => {
+                if (!res.ok) {
+                    setErrorMessage("Invalid username or password");
+                } else {
+                    const data = res.json();
+                    const { accessToken } = data;
+                    localStorage.setItem('token', accessToken);
+                    onLogin();
+                }
+                return res.json(); 
+            })
+            .catch(error => {
+                alert('There was an error fetching data from the server. Please try again later.');
             });
-
-            if (!response.ok) {
-                throw new Error("Invalid username or password");
-            }
-
-            const data = await response.json();
-            const { accessToken } = data;
-            localStorage.setItem('token', accessToken);
-            onLogin();
+            
         } catch (error) {
-            setErrorMessage(error.message);
+            
         }
     };
 
