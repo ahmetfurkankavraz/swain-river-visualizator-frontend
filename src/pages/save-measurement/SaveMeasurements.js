@@ -23,7 +23,7 @@ const options = {
       zIndex: 1
 };
 
-function SaveMeasurements({setLoggedOut}){
+function SaveMeasurements({setLoggedOut, onLogout}){
 
     let [river, setRiver] = useState(null);
     let [devices, setDevices] = useState(null);
@@ -95,7 +95,7 @@ function SaveMeasurements({setLoggedOut}){
     return (
         <div>
             <h1>Save Measurements</h1>
-            <Navbar />
+            <Navbar logOut={onLogout}/>
             <div className='margin-top-20'>
                 <GoogleMap
                     id="google-map"

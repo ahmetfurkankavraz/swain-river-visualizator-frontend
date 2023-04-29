@@ -1,4 +1,11 @@
 import React, { useState } from "react";
+import crypto from "crypto";
+
+function sha256(input) {
+    const hash = crypto.createHash('sha256');
+    hash.update(input);
+    return hash.digest('hex');
+}
 
 function Login({ onLogin }) {
     const [username, setUsername] = useState("");
@@ -12,7 +19,7 @@ function Login({ onLogin }) {
             fetch("/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ username, password }),
+                body: JSON.stringify({ username, password: sha256(password) }),
             })
             .then((res) => {
                 if (res.status === 400) {

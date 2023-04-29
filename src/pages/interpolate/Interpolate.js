@@ -6,13 +6,14 @@ import Navbar from '../../components/Navbar';
 import SelectDate from './SelectDate';
 import SelectType from './SelectType';
 import LoadingMessage from '../../components/LoadingMessage';
+import MeasurementMarker from './MeasurementMarker';
 
 const mapContainerStyle = {
-    height: "600px",
-    width: "1000px"
+    height: "500px",
+    width: "800px"
 }
 
-function Interpolate({setLoggedOut}) {
+function Interpolate({setLoggedOut, onLogout}) {
 
     let [dates, setDates] = useState(null);
     let [selectedDate, setSelectedDate] = useState();
@@ -20,6 +21,8 @@ function Interpolate({setLoggedOut}) {
     let [selectedType, setSelectedType] = useState();
     let [interpolatedRiver, setInterpolatedRiver] = useState(null);
     let [isLoading, setIsLoading] = useState(false);
+    let [measurements, setMeasurements] = useState(null);
+    let [measurementVisibility, setMeasurementVisibility] = useState(false);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -53,6 +56,39 @@ function Interpolate({setLoggedOut}) {
 
         return () => controller.abort()
     }, [selectedDate]);
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        const controller = new AbortController()
+        setMeasurements(null);
+        if (selectedDate && selectedType) {
+            fetch('/measurement/' + selectedDate + '/' + selectedType, {
+                signal: controller.signal,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+                .then(res => {
+                    if (res.status === 401 || res.status === 403) {
+                        setLoggedOut();
+                        localStorage.removeItem('token');
+                    }
+                    return res.json();
+                })
+                .then(json => {
+                    setMeasurements(json)
+                })
+                .catch(error => {
+                    if (error.name === 'SyntaxError') {
+                        alert('There was an error fetching data from the server. Please try again later.');
+                        setLoggedOut();
+                        localStorage.removeItem('token');
+                    }
+                })
+        }
+        return () => controller.abort()
+    }, [selectedType])
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -130,7 +166,7 @@ function Interpolate({setLoggedOut}) {
     return (
         <div>
             <h1>Interpolate</h1>
-            <Navbar />
+            <Navbar logOut={onLogout}/>
             {dates && (
                 <div className='interpolation-form'>
                     <div>
@@ -144,16 +180,26 @@ function Interpolate({setLoggedOut}) {
                     </div>
                 </div>
             )}
-            <br />
+            {interpolatedRiver && <button 
+                className='general-button margin-top-20'
+                onClick={()=>{setMeasurementVisibility(!measurementVisibility)}}>
+                    Show/Hide Measurement Values
+            </button>}
+            
             {isLoading !== false && (<LoadingMessage />)}
+            
             {interpolatedRiver && (<GoogleMap
                 id="google-map"
                 mapContainerStyle={mapContainerStyle}
                 zoom={9}
                 center={{
-                    "lng": 27.03827264000007,
+                    "lng": 27.16827264000007,
                     "lat": 41.35322476700003
                 }}>
+
+                {measurementVisibility && measurements && measurements.map(measurement => (
+                    <MeasurementMarker key={measurement._id} measurement={measurement} />
+                ))}
                 <MapComponents interpolatedRiver={interpolatedRiver} />
             </GoogleMap>)}
         </div>

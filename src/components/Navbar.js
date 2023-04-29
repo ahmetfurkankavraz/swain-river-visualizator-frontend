@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-function Navbar(){
+function Navbar({logOut}){
     return (
         <nav className='navbar'>
           <ul>
@@ -18,6 +18,7 @@ function Navbar(){
               <Link to="/save-measurement">Save Measurement</Link>
             </li>
           </ul>
+          <button className='logout' onClick={logOut}>Log Out</button>
         </nav>
       );
 }

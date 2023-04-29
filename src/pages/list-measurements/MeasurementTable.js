@@ -75,7 +75,8 @@ function MeasurementTable(props){
                 <table className='measurement-table'>
                     <thead>
                         <tr>
-                            <th>Measurement Id</th>
+                            <th>Longitude</th>
+                            <th>Latitude</th>
                             <th>Date</th>
                             <th>Type</th>
                             <th>Value</th>
@@ -85,7 +86,8 @@ function MeasurementTable(props){
                     <tbody>
                         {measurementList && measurementList.map(measurement => (
                             <tr key={measurement._id} >
-                                <th>{measurement._id}</th>
+                                <th>{measurement.lng}</th>
+                                <th>{measurement.lat}</th>
                                 <th>{measurement.date}</th>
                                 <th>{measurement.type}</th>
                                 <th>{measurement.value}</th>

@@ -18,6 +18,11 @@ function App() {
         setAuthenticated(false);
     }
 
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        setAuthenticated(false);
+    }
+
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
@@ -31,12 +36,12 @@ function App() {
         <BrowserRouter>
             <Routes>
                 {!authenticated && <Route path="/login" element={<Login onLogin={handleLogin} />} />}
-                {authenticated && <Route path="/" element={<Home setLoggedOut={setLoggedOut}/>} />}
-                {authenticated && <Route path="list-measurements" element={<ListMeasurements setLoggedOut={setLoggedOut}/>} />}
-                {authenticated && <Route path="save-measurement" element={<SaveMeasurements setLoggedOut={setLoggedOut}/>} />}
-                {authenticated && <Route path="interpolate" element={<Interpolate setLoggedOut={setLoggedOut}/>} />}
+                {authenticated && <Route path="/" element={<Home setLoggedOut={setLoggedOut} onLogout={handleLogout}/>} />}
+                {authenticated && <Route path="list-measurements" element={<ListMeasurements setLoggedOut={setLoggedOut} onLogout={handleLogout}/>} />}
+                {authenticated && <Route path="save-measurement" element={<SaveMeasurements setLoggedOut={setLoggedOut} onLogout={handleLogout}/>} />}
+                {authenticated && <Route path="interpolate" element={<Interpolate setLoggedOut={setLoggedOut} onLogout={handleLogout}/>} />}
                 {!authenticated && <Route path="*" element={<Navigate to="/login"/>} />}
-                {authenticated && <Route path="*" element={<Navigate to="/"/>} />}
+                {authenticated && <Route path="*" element={<Navigate to="/" onLogout={handleLogout}/>} />}
             </Routes>
         </BrowserRouter>
     )
