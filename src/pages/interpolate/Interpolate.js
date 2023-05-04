@@ -14,8 +14,7 @@ function arrayRange(start, end, step = 1) {
       arr.push(i);
     }
     return arr;
-}
-  
+} 
 
 const mapContainerStyle = {
     height: "500px",
@@ -34,7 +33,6 @@ function Interpolate({setLoggedOut, onLogout}) {
     let [measurementVisibility, setMeasurementVisibility] = useState(false);
 
     let [scaleList, setScaleList] = useState([0, 0, 0, 0, 0, 0]);
-    let [buttonClicked, setButtonClicked] = useState(false);
 
     const handleInputChange = (event, index) => {
         const newList = [...scaleList];
@@ -52,6 +50,8 @@ function Interpolate({setLoggedOut, onLogout}) {
         const token = localStorage.getItem('token');
         setInterpolatedRiver(null);
         setTypes(null);
+        setMeasurements(null);
+        setScaleList([0, 0, 0, 0, 0, 0]);
         const controller = new AbortController()
         if (selectedDate) {
             fetch('/measurement/' + selectedDate + '/type', {
@@ -85,7 +85,7 @@ function Interpolate({setLoggedOut, onLogout}) {
         const token = localStorage.getItem('token');
         const controller = new AbortController()
 
-        if (!selectedDate && !selectedType) {
+        if (!selectedDate || !selectedType) {
             return
         }
 
@@ -160,11 +160,11 @@ function Interpolate({setLoggedOut, onLogout}) {
         setInterpolatedRiver(null);
         if (selectedDate && selectedType) {
             setIsLoading(true);
-            fetch('/interpolate/' + selectedDate + '/' + selectedType, {
+            fetch(`/interpolate/${selectedDate}/${selectedType}?${scaleList.map(scale => `scaleArray=${scale}`).join('&')}`, {
                 signal: controller.signal,
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`
                 }
             })
                 .then(res => {
@@ -259,22 +259,22 @@ function Interpolate({setLoggedOut, onLogout}) {
                             {scaleList && scaleList.map((scale, index) => {
                                 if (index !== scaleList.length - 1) {
                                     return (
-                                    <div className='margin-top-20'>
-                                        <label>{index+1}th Group</label>
+                                    <div key={index} className='margin-top-20'>
+                                        <label>{index+1}. Group</label>
                                     </div>
                                     );
                                 } else {
-                                    return <></>; // render nothing
+                                    return <div key={index}></div>;
                                 }
                             })}
                             </div>
                             <div style={{flexDirection:'column'}}>
                                 {scaleList && scaleList.map((scale, index) => (
-                                    <div>
+                                    <div key={index}>
                                     <input 
                                         type='number'
                                         key={index}
-                                        value={scaleList[index]}
+                                        value={scale}
                                         onChange={(e) => {handleInputChange(e, index)}}/>
                                     </div>
                                 ))}
