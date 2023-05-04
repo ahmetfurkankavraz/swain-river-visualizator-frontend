@@ -3,10 +3,11 @@ import { GoogleMap, PolylineF } from "@react-google-maps/api";
 import { useEffect, useState } from "react";
 import DeviceMarker from "./DeviceMarker";
 import Navbar from '../../components/Navbar';
+import LoadingMessage from '../../components/LoadingMessage';
 
 const mapContainerStyle = {
-    height: "600px",
-    width: "1000px"
+    height: "500px",
+    width: "750px"
 }
   
 const options = {
@@ -97,7 +98,7 @@ function SaveMeasurements({setLoggedOut, onLogout}){
             <h1>Save Measurements</h1>
             <Navbar logOut={onLogout}/>
             <div className='margin-top-20'>
-                <GoogleMap
+                {river && devices && <GoogleMap
                     id="google-map"
                     mapContainerStyle={mapContainerStyle}
                     zoom={9}
@@ -126,7 +127,7 @@ function SaveMeasurements({setLoggedOut, onLogout}){
                         <DeviceMarker key={device._id} device={device} setLoggedOut={setLoggedOut} />
                     ))}
 
-                </GoogleMap>
+                </GoogleMap>}
             </div>
         </div>
     )

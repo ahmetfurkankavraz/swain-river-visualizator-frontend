@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import DeviceMarker from './DeviceMarker';
 
 const mapContainerStyle = {
-    height: "600px",
-    width: "1000px"
+    height: "500px",
+    width: "750px"
 }
   
 const options = {
@@ -95,7 +95,7 @@ function Maps(props){
 
     return (
         <div className='margin-top-20'>
-            <GoogleMap
+            {river && <GoogleMap
                 id="google-map"
                 mapContainerStyle={mapContainerStyle}
                 zoom={9}
@@ -116,7 +116,7 @@ function Maps(props){
                     <DeviceMarker key={device._id} device={device} setClickedDevice={setClickedDevice} />
                 ))}
 
-            </GoogleMap>
+            </GoogleMap>}
         </div>
     )
 }

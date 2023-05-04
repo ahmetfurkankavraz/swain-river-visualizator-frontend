@@ -7,6 +7,7 @@ function DeviceMarker(props){
 
     return (
         <MarkerF
+            title={`Longitude: ${device.lng}\nLatitude: ${device.lat}`}
             position={{
                 lat: device.lat,
                 lng: device.lng
