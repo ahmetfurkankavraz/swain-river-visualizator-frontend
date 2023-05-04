@@ -45,6 +45,9 @@
 .margin-top-20 {
   margin: 20px 0px;
 }
+.margin-horizontal-20 {
+  margin: 0px 20px;
+}
 .button-red {
   background-color: #f1356d;
 }
@@ -133,7 +136,32 @@
 .interpolation-form {
   display: flex;
   margin: 10px 0px;
+  flex-direction: row;
+}
+.interpolation-form .select-ranges label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.interpolation-form .map {
   flex-direction: column;
+}
+
+.interpolation-form .select-ranges input {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+.interpolation-form .select-ranges .range-form {
+  display: flex;
+  flex-direction: column;
+  margin-right: 10px;
+}
+.interpolation-form .selected-date-type {
+  display: flex;
+  flex-direction: column;
+  margin-right: 10px;
 }
 .interpolation-form label {
   font-weight: bold;
