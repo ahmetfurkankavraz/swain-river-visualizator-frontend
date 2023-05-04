@@ -76,11 +76,12 @@ const options = [{
 
 function MapComponents(props){
 
-    let {interpolatedRiver, measurementVisibility, measurements} = props;
+    let {interpolatedRiver, measurements} = props;
+    let {measurementVisibility, id} = props;
 
     return (
         <GoogleMap
-            id="google-map"
+            id={`google-map-${id}`}
             mapContainerStyle={mapContainerStyle}
             zoom={9}
             center={{
@@ -91,6 +92,7 @@ function MapComponents(props){
             {measurementVisibility && measurements && measurements.map(measurement => (
                 <MeasurementMarker key={measurement._id} measurement={measurement} />
             ))}
+
             {interpolatedRiver && Array.isArray(interpolatedRiver) && 
                 interpolatedRiver.map(riverBranch => (
                 <PolylineF

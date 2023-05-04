@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Interpolate from "./pages/interpolate/Interpolate";
 import ListMeasurements from "./pages/list-measurements/ListMeasurements";
 import SaveMeasurements from "./pages/save-measurement/SaveMeasurements";
+import Compare from "./pages/compare/Compare";
 import Home from "./pages/home/Home";
 import Login from "./pages/login/Login";
 
@@ -40,6 +41,7 @@ function App() {
                 {authenticated && <Route path="list-measurements" element={<ListMeasurements setLoggedOut={setLoggedOut} onLogout={handleLogout}/>} />}
                 {authenticated && <Route path="save-measurement" element={<SaveMeasurements setLoggedOut={setLoggedOut} onLogout={handleLogout}/>} />}
                 {authenticated && <Route path="interpolate" element={<Interpolate setLoggedOut={setLoggedOut} onLogout={handleLogout}/>} />}
+                {authenticated && <Route path="compare" element={<Compare setLoggedOut={setLoggedOut} onLogout={handleLogout}/>} />}
                 {!authenticated && <Route path="*" element={<Navigate to="/login"/>} />}
                 {authenticated && <Route path="*" element={<Navigate to="/" onLogout={handleLogout}/>} />}
             </Routes>

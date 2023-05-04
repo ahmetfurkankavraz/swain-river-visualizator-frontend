@@ -17,15 +17,24 @@ function arrayRange(start, end, step = 1) {
 function Interpolate({setLoggedOut, onLogout}) {
 
     let [dates, setDates] = useState(null);
-    let [selectedDate, setSelectedDate] = useState();
+    let [selectedDate1, setSelectedDate1] = useState();
+    let [selectedDate2, setSelectedDate2] = useState();
     let [types, setTypes] = useState(null);
     let [selectedType, setSelectedType] = useState();
-    let [interpolatedRiver, setInterpolatedRiver] = useState(null);
+    let [interpolatedRiver1, setInterpolatedRiver1] = useState(null);
+    let [interpolatedRiver2, setInterpolatedRiver2] = useState(null);
     let [isLoading, setIsLoading] = useState(false);
-    let [measurements, setMeasurements] = useState(null);
-    let [measurementVisibility, setMeasurementVisibility] = useState(false);
+    let [measurements1, setMeasurements1] = useState(null);
+    let [measurements2, setMeasurements2] = useState(null);
+
+    let [measurementVisibility1, setMeasurementVisibility1] = useState(false);
+    let [measurementVisibility2, setMeasurementVisibility2] = useState(false);
 
     let [scaleList, setScaleList] = useState([0, 0, 0, 0, 0, 0]);
+    let [minDate1, setMinDate1] = useState(null);
+    let [minDate2, setMinDate2] = useState(null);
+    let [maxDate1, setMaxDate1] = useState(null);
+    let [maxDate2, setMaxDate2] = useState(null);
 
     const handleInputChange = (event, index) => {
         const newList = [...scaleList];
@@ -38,15 +47,18 @@ function Interpolate({setLoggedOut, onLogout}) {
         setScaleList(newList);
     };
 
+    // select the type that will be used for interpolation
     useEffect(() => {
         const token = localStorage.getItem('token');
-        setInterpolatedRiver(null);
-        setTypes(null);
-        setMeasurements(null);
+        setInterpolatedRiver1(null);
+        setInterpolatedRiver2(null);
+        setDates(null);
+        setMeasurements1(null);
+        setMeasurements2(null);
         setScaleList([0, 0, 0, 0, 0, 0]);
         const controller = new AbortController()
-        if (selectedDate) {
-            fetch('/measurement/' + selectedDate + '/type', {
+        if (selectedType) {
+            fetch('/measurement/' + selectedType + '/date', {
                 signal: controller.signal,
                 headers: {
                     'Content-Type': 'application/json',
@@ -61,7 +73,7 @@ function Interpolate({setLoggedOut, onLogout}) {
                     return res.json();
                 })
                 .then(json => {
-                    setTypes(json)  
+                    setDates(json)  
                 })
                 .catch(error => {
                     if (error.name === "SyntaxError") {
@@ -71,19 +83,23 @@ function Interpolate({setLoggedOut, onLogout}) {
         }
 
         return () => controller.abort()
-    }, [selectedDate]);
+    }, [selectedType]);
 
+    // select the first date for interpolation
     useEffect(() => {
         const token = localStorage.getItem('token');
         const controller = new AbortController()
 
-        if (!selectedDate || !selectedType) {
+        setMinDate1(null);
+        setMaxDate1(null);
+
+        if (!selectedDate1 || !selectedType) {
             return
         }
 
         setScaleList([0, 0, 0, 0, 0, 0]);
 
-        fetch('/measurement/catalog/' + selectedDate + '/' + selectedType, {
+        fetch('/measurement/catalog/' + selectedDate1 + '/' + selectedType, {
             signal: controller.signal,
             headers: {
                 'Content-Type': 'application/json',
@@ -99,8 +115,8 @@ function Interpolate({setLoggedOut, onLogout}) {
             .then(json => {
                 let min = json["min-value"];
                 let max = json["max-value"];
-                let scaleList = arrayRange(min, max, (max-min)/5);
-                setScaleList(scaleList);
+                setMinDate1(min);
+                setMaxDate1(max);
             })
             .catch(error => {
                 if (error.name === "SyntaxError") {
@@ -111,9 +127,63 @@ function Interpolate({setLoggedOut, onLogout}) {
             })
         
         return () => controller.abort()
-    }, [selectedType])
+    }, [selectedDate1])
 
-    const retrieveMeasurements = async () => {
+    // select the second date for interpolation
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        const controller = new AbortController()
+
+        setMinDate2(null);
+        setMaxDate2(null);
+
+        if (!selectedDate2 || !selectedType) {
+            return
+        }
+
+        setScaleList([0, 0, 0, 0, 0, 0]);
+
+        fetch('/measurement/catalog/' + selectedDate2 + '/' + selectedType, {
+            signal: controller.signal,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }})
+            .then(res => {
+                if (res.status === 401 || res.status === 403) {
+                    setLoggedOut();
+                    localStorage.removeItem('token');
+                }
+                return res.json();
+            })
+            .then(json => {
+                let min = json["min-value"];
+                let max = json["max-value"];
+                setMinDate2(min);
+                setMaxDate2(max);
+            })
+            .catch(error => {
+                if (error.name === "SyntaxError") {
+                    alert('There was an error fetching data from the server. Please try again later.');
+                    setLoggedOut();
+                    localStorage.removeItem('token');
+                }
+            })
+        
+        return () => controller.abort()
+    }, [selectedDate2])
+
+    useEffect(() => {
+        if (!minDate1 || !minDate2 || !maxDate1 || !maxDate2) {
+            return
+        }
+        let minOfMin = Math.min(minDate1, minDate2);
+        let maxOfMax = Math.max(maxDate1, maxDate2);
+        let scaleList = arrayRange(minOfMin, maxOfMax, (maxOfMax-minOfMin) / 5);
+        setScaleList(scaleList);
+    }, [maxDate1, maxDate2]);
+
+    const retrieveMeasurements = async (selectedDate, setMeasurements) => {
         const token = localStorage.getItem('token');
         const controller = new AbortController()
         setMeasurements(null);
@@ -146,7 +216,7 @@ function Interpolate({setLoggedOut, onLogout}) {
         return () => controller.abort()
     }
 
-    const retrieveInterpolation = async () => {
+    const retrieveInterpolation = async (selectedDate, setInterpolatedRiver) => {
         const token = localStorage.getItem('token');
         const controller = new AbortController()
         setInterpolatedRiver(null);
@@ -187,7 +257,7 @@ function Interpolate({setLoggedOut, onLogout}) {
         const token = localStorage.getItem('token');
         const controller = new AbortController()
 
-        fetch('/measurement/date', {
+        fetch('/measurement/type', {
             signal: controller.signal,
             headers: {
                 'Content-Type': 'application/json',
@@ -202,7 +272,7 @@ function Interpolate({setLoggedOut, onLogout}) {
                 return res.json();
             })
             .then(json => {
-                setDates(json)
+                setTypes(json)
             })
             .catch(error => {
                 if (error.name === 'SyntaxError') {
@@ -215,34 +285,36 @@ function Interpolate({setLoggedOut, onLogout}) {
         return () => controller.abort()
     }, []);
 
-    useEffect(() => {
-        // Do something with the "types" state here, if needed.
-    }, [types]);
-
     const handleInterpolation = async () => {
-        retrieveInterpolation();
-        retrieveMeasurements();
+        retrieveInterpolation(selectedDate1, setInterpolatedRiver1);
+        retrieveInterpolation(selectedDate2, setInterpolatedRiver2);
+        retrieveMeasurements(selectedDate1, setMeasurements1);
+        retrieveMeasurements(selectedDate2, setMeasurements2);
     }
 
     return (
         <div>
             <h1>Interpolate</h1>
             <Navbar logOut={onLogout}/>
-            {dates && (
+            {types && (
+                <>
                 <div className='interpolation-form'>
                     <div className='selected-date-type'>
                         <div>
-                            <SelectDate dates={dates} 
-                                setSelectedDate={setSelectedDate} />
+                            <SelectType types={types}
+                                setSelectedType={setSelectedType} />
+                            
                         </div>
                         <br />
-                        <div>
-                            {types && <SelectType types={types}
-                                setSelectedType={setSelectedType} />}
+                        <div style={{flexDirection: 'column'}}>
+                            {dates && <SelectDate dates={dates} 
+                                setSelectedDate={setSelectedDate1} />}
+                            {dates && <SelectDate dates={dates} 
+                                setSelectedDate={setSelectedDate2} />}
                         </div>
                     </div>
                     <div className='select-ranges margin-horizontal-20'>
-                    {selectedDate && selectedType && (
+                    {selectedDate1 && selectedDate2 && selectedType && (
                         <div className='range-form' style={{flexDirection:'row'}}>
                             <div>
                                 <label>Ranges</label>
@@ -270,29 +342,47 @@ function Interpolate({setLoggedOut, onLogout}) {
                                         onChange={(e) => {handleInputChange(e, index)}}/>
                                     </div>
                                 ))}
+                            </div>
+                            <div style={{flexDirection:'column', margin: '0px 20px'}}>
                                 <button className='general-button margin-top-20'
                                     onClick={handleInterpolation} >Interpolate</button>
                             </div>
                         </div>
                     )}
                     </div>
-
-                    <div>
-                    {interpolatedRiver && <button 
-                        className='general-button margin-top-20'
-                        onClick={()=>{setMeasurementVisibility(!measurementVisibility)}}>
-                            Show/Hide Measurement Values
-                    </button>}
-                    
-                    {isLoading !== false && (<LoadingMessage />)}
-                    
-                    {interpolatedRiver && (<MapComponents 
-                        interpolatedRiver={interpolatedRiver}
-                        measurements={measurements}
-                        measurementVisibility={measurementVisibility}
-                        />)}
-                    </div>
                 </div>
+                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                    <div>
+                        {isLoading !== false && (<LoadingMessage />)}
+                    </div>                    
+                    {interpolatedRiver1 && <div style={{margin: '0px 20px'}}>
+                        <button 
+                            className='general-button margin-top-20'
+                            onClick={()=>{setMeasurementVisibility1(!measurementVisibility1)}}>
+                                Show/Hide Measurement Values of the first
+                        </button>
+                        <MapComponents 
+                            id={1}
+                            interpolatedRiver={interpolatedRiver1}
+                            measurements={measurements1}
+                            measurementVisibility={measurementVisibility1}
+                            />
+                    </div>}
+                    { interpolatedRiver2 && <div style={{margin: '0px 20px'}}>
+                        <button 
+                            className='general-button margin-top-20'
+                            onClick={()=>{setMeasurementVisibility2(!measurementVisibility2)}}>
+                                Show/Hide Measurement Values of the second
+                        </button>
+                        <MapComponents 
+                            id={2}
+                            interpolatedRiver={interpolatedRiver2}
+                            measurements={measurements2}
+                            measurementVisibility={measurementVisibility2}
+                            />
+                    </div>}
+                </div>
+                </>
             )}
         </div>
     )

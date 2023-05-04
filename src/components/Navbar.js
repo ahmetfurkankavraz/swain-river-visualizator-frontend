@@ -12,6 +12,9 @@ function Navbar({logOut}){
               <Link to="/interpolate">Interpolate</Link>
             </li>
             <li>
+              <Link to="/compare">Compare</Link>
+            </li>
+            <li>
               <Link to="/list-measurements">List Measurements</Link>
             </li>
             <li>
