@@ -104,7 +104,7 @@ function CrossingPointsObserver({ setLoggedOut, onLogout}) {
 
   return (
     <div>
-      <h1>Deneme</h1>
+      <h1>Crossing Points Observer</h1>
       <Navbar />
       <GoogleMap
         id="google-map"

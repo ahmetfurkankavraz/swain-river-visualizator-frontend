@@ -24,10 +24,7 @@ const options = {
 
 function Maps(props){
 
-    let {setClickedDevice, setLoggedOut} = props
-
-    let [river, setRiver] = useState(null);
-    let [devices, setDevices] = useState(null);
+    let {setClickedDevice, setLoggedOut, river, setRiver, devices, setDevices} = props
 
     useEffect(() => {
         const controller = new AbortController()

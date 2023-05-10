@@ -98,6 +98,7 @@ function SaveMeasurements({setLoggedOut, onLogout}){
             <h1>Save Measurements</h1>
             <Navbar logOut={onLogout}/>
             <div className='margin-top-20'>
+                {(!river || !devices) && <LoadingMessage />}
                 {river && devices && <GoogleMap
                     id="google-map"
                     mapContainerStyle={mapContainerStyle}
