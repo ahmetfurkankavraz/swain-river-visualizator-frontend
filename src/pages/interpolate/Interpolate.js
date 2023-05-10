@@ -6,11 +6,12 @@ import SelectDate from './SelectDate';
 import SelectType from './SelectType';
 import LoadingMessage from '../../components/LoadingMessage';
 
-function arrayRange(start, end, step = 1) {
+function arrayRange(start, end, div = 5) {
     const arr = [];
-    for (let i = start; i <= end; i += step) {
-      arr.push(i);
+    for (let i = 0; i <= div; i++) {
+        arr.push(start + (end - start) / div * i);
     }
+    console.log(start, end, arr);
     return arr;
 } 
 
@@ -99,7 +100,7 @@ function Interpolate({setLoggedOut, onLogout}) {
             .then(json => {
                 let min = json["min-value"];
                 let max = json["max-value"];
-                let scaleList = arrayRange(min, max, (max-min)/5);
+                let scaleList = arrayRange(min, max);
                 setScaleList(scaleList);
             })
             .catch(error => {

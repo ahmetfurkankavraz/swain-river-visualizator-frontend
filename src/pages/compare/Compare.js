@@ -294,7 +294,7 @@ function Interpolate({setLoggedOut, onLogout}) {
 
     return (
         <div>
-            <h1>Interpolate</h1>
+            <h1>Compare</h1>
             <Navbar logOut={onLogout}/>
             {types && (
                 <>
@@ -345,7 +345,7 @@ function Interpolate({setLoggedOut, onLogout}) {
                             </div>
                             <div style={{flexDirection:'column', margin: '0px 20px'}}>
                                 <button className='general-button margin-top-20'
-                                    onClick={handleInterpolation} >Interpolate</button>
+                                    onClick={handleInterpolation} >Compare</button>
                             </div>
                         </div>
                     )}

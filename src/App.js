@@ -7,6 +7,7 @@ import SaveMeasurements from "./pages/save-measurement/SaveMeasurements";
 import Compare from "./pages/compare/Compare";
 import Home from "./pages/home/Home";
 import Login from "./pages/login/Login";
+import CrossingPointsObserver from "./pages/crossing-points-observer/CatalogObserver";
 
 function App() {
     const [authenticated, setAuthenticated] = useState(false);
@@ -42,6 +43,7 @@ function App() {
                 {authenticated && <Route path="save-measurement" element={<SaveMeasurements setLoggedOut={setLoggedOut} onLogout={handleLogout}/>} />}
                 {authenticated && <Route path="interpolate" element={<Interpolate setLoggedOut={setLoggedOut} onLogout={handleLogout}/>} />}
                 {authenticated && <Route path="compare" element={<Compare setLoggedOut={setLoggedOut} onLogout={handleLogout}/>} />}
+                {authenticated && <Route path="crossing-points-observer" element={<CrossingPointsObserver setLoggedOut={setLoggedOut} onLogout={handleLogout}/>} />}
                 {!authenticated && <Route path="*" element={<Navigate to="/login"/>} />}
                 {authenticated && <Route path="*" element={<Navigate to="/" onLogout={handleLogout}/>} />}
             </Routes>
