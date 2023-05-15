@@ -316,15 +316,12 @@ function Interpolate({setLoggedOut, onLogout}) {
                     <div className='select-ranges margin-horizontal-20'>
                     {selectedDate1 && selectedDate2 && selectedType && (
                         <div className='range-form' style={{flexDirection:'row'}}>
-                            <div>
-                                <label>Ranges</label>
-                            </div>
-                            <div style={{flexDirection:'column'}}>
+                        <div style={{flexDirection:'column'}}>
                             {scaleList && scaleList.map((scale, index) => {
                                 if (index !== scaleList.length - 1) {
                                     return (
                                     <div key={index} className='margin-top-20'>
-                                        <label>{index+1}. Group</label>
+                                        <label>{index+1}. Scale</label>
                                     </div>
                                     );
                                 } else {
@@ -332,23 +329,38 @@ function Interpolate({setLoggedOut, onLogout}) {
                                 }
                             })}
                             </div>
-                            <div style={{flexDirection:'column'}}>
-                                {scaleList && scaleList.map((scale, index) => (
-                                    <div key={index}>
-                                    <input 
-                                        type='number'
-                                        key={index}
-                                        value={scale}
-                                        onChange={(e) => {handleInputChange(e, index)}}/>
-                                    </div>
-                                ))}
+                            <div style={{flexDirection: 'column'}}>
+                                {scaleList &&
+                                    scaleList.map((scale, index) => (
+                                    index !== scaleList.length - 1 && (
+                                        <div key={index}>
+                                        <input
+                                            type='number'
+                                            value={scale}
+                                            onChange={(e) => handleInputChange(e, index)}
+                                        />
+                                        </div>
+                                    )
+                                    ))}
                             </div>
-                            <div style={{flexDirection:'column', margin: '0px 20px'}}>
-                                <button className='general-button margin-top-20'
-                                    onClick={handleInterpolation} >Compare</button>
+                            <div style={{flexDirection: 'column'}}>
+                                {scaleList &&
+                                    scaleList.map((scale, index) => (
+                                    index !== 0 && (
+                                        <div key={index}>
+                                        <input
+                                            type='number'
+                                            value={scale}
+                                            onChange={(e) => handleInputChange(e, index)}
+                                        />
+                                        </div>
+                                    )
+                                    ))}
+                                <button className='general-button margin-top-20' 
+                                    onClick={handleInterpolation}>Interpolate</button>
                             </div>
                         </div>
-                    )}
+                        )}
                     </div>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'row' }}>
