@@ -85,17 +85,6 @@ function Interpolate({setLoggedOut, onLogout}) {
         return () => controller.abort()
     }, [selectedType]);
 
-    const updateScaleList = () => {
-        if (minDate1 === null || minDate2 === null || maxDate1 === null || maxDate2 === null || 
-            minDate1 === undefined || minDate2 === undefined || maxDate1 === undefined || maxDate2 === undefined) {
-            return
-        }
-        let minOfMin = Math.min(minDate1, minDate2);
-        let maxOfMax = Math.max(maxDate1, maxDate2);
-        let scaleList = arrayRange(minOfMin, maxOfMax, (maxOfMax-minOfMin) / 5);
-        setScaleList(scaleList);
-    }
-
     // select the first date for interpolation
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -128,7 +117,6 @@ function Interpolate({setLoggedOut, onLogout}) {
                 let max = json["max-value"];
                 setMinDate1(min);
                 setMaxDate1(max);
-                updateScaleList();
             })
             .catch(error => {
                 if (error.name === "SyntaxError") {
@@ -173,7 +161,6 @@ function Interpolate({setLoggedOut, onLogout}) {
                 let max = json["max-value"];
                 setMinDate2(min);
                 setMaxDate2(max);
-                updateScaleList();
             })
             .catch(error => {
                 if (error.name === "SyntaxError") {
@@ -185,6 +172,16 @@ function Interpolate({setLoggedOut, onLogout}) {
         
         return () => controller.abort()
     }, [selectedDate2])
+
+    useEffect(() => {
+        if (minDate1 === null || minDate2 === null || maxDate1 === null || maxDate2 === null) {
+            return
+        }
+        let minOfMin = Math.min(minDate1, minDate2);
+        let maxOfMax = Math.max(maxDate1, maxDate2);
+        let scaleList = arrayRange(minOfMin, maxOfMax, (maxOfMax-minOfMin) / 5);
+        setScaleList(scaleList);
+    }, [minDate1, minDate2, maxDate1, maxDate2]);
 
     const retrieveMeasurements = async (selectedDate, setMeasurements) => {
         const token = localStorage.getItem('token');
