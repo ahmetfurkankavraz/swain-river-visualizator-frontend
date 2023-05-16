@@ -20,9 +20,9 @@ function Navbar({logOut}){
             <li>
               <Link to="/save-measurement">Save Measurement</Link>
             </li>
-            <li>
+            {/* <li>
               <Link to="/crossing-points-observer">CrossingPointsObserver</Link>
-            </li>
+            </li> */}
           </ul>
           <button className='logout' onClick={logOut}>Log Out</button>
         </nav>

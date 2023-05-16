@@ -13,11 +13,15 @@ function DeviceMarker(props){
     let [visible, setVisible] = useState(false);
 
     const handleSubmit = async (e) => {
-        
+        const controller = new AbortController()
+        const token = localStorage.getItem('token');
+
         e.preventDefault();
         await fetch("/measurement", {
+            signal: controller.signal,
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             method: "POST",
             body: JSON.stringify({
@@ -36,6 +40,7 @@ function DeviceMarker(props){
                 localStorage.removeItem('token');
             }
         });
+        return () => controller.abort()
     }
 
     return (
