@@ -46,7 +46,7 @@ function CrossingPointsObserver({ setLoggedOut, onLogout}) {
     const token = localStorage.getItem('token');
     const controller = new AbortController()
 
-    fetch("/river-catalog", {
+    fetch(process.env.REACT_APP_BACKEND_APP + "/river-catalog", {
         signal: controller.signal,
         headers: {
             'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ function CrossingPointsObserver({ setLoggedOut, onLogout}) {
     const token = localStorage.getItem('token');
     const controller = new AbortController()
 
-    fetch('/river', {
+    fetch(process.env.REACT_APP_BACKEND_APP + '/river', {
         signal: controller.signal,
         headers: {
             'Content-Type': 'application/json',

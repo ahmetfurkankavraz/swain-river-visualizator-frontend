@@ -58,7 +58,7 @@ function Interpolate({setLoggedOut, onLogout}) {
         setScaleList([0, 0, 0, 0, 0, 0]);
         const controller = new AbortController()
         if (selectedType) {
-            fetch('/measurement/' + selectedType + '/date', {
+            fetch(process.env.REACT_APP_BACKEND_APP + '/measurement/' + selectedType + '/date', {
                 signal: controller.signal,
                 headers: {
                     'Content-Type': 'application/json',
@@ -99,7 +99,7 @@ function Interpolate({setLoggedOut, onLogout}) {
 
         setScaleList([0, 0, 0, 0, 0, 0]);
 
-        fetch('/measurement/catalog/' + selectedDate1 + '/' + selectedType, {
+        fetch(process.env.REACT_APP_BACKEND_APP + '/measurement/catalog/' + selectedDate1 + '/' + selectedType, {
             signal: controller.signal,
             headers: {
                 'Content-Type': 'application/json',
@@ -143,7 +143,7 @@ function Interpolate({setLoggedOut, onLogout}) {
 
         setScaleList([0, 0, 0, 0, 0, 0]);
 
-        fetch('/measurement/catalog/' + selectedDate2 + '/' + selectedType, {
+        fetch(process.env.REACT_APP_BACKEND_APP + '/measurement/catalog/' + selectedDate2 + '/' + selectedType, {
             signal: controller.signal,
             headers: {
                 'Content-Type': 'application/json',
@@ -188,7 +188,7 @@ function Interpolate({setLoggedOut, onLogout}) {
         const controller = new AbortController()
         setMeasurements(null);
         if (selectedDate && selectedType) {
-            fetch('/measurement/' + selectedDate + '/' + selectedType, {
+            fetch(process.env.REACT_APP_BACKEND_APP + '/measurement/' + selectedDate + '/' + selectedType, {
                 signal: controller.signal,
                 headers: {
                     'Content-Type': 'application/json',
@@ -222,7 +222,7 @@ function Interpolate({setLoggedOut, onLogout}) {
         setInterpolatedRiver(null);
         if (selectedDate && selectedType) {
             setIsLoading(true);
-            fetch(`/interpolate/${selectedDate}/${selectedType}?${scaleList.map(scale => `scaleArray=${scale}`).join('&')}`, {
+            fetch(process.env.REACT_APP_BACKEND_APP + `/interpolate/${selectedDate}/${selectedType}?${scaleList.map(scale => `scaleArray=${scale}`).join('&')}`, {
                 signal: controller.signal,
                 headers: {
                   'Content-Type': 'application/json',
@@ -257,7 +257,7 @@ function Interpolate({setLoggedOut, onLogout}) {
         const token = localStorage.getItem('token');
         const controller = new AbortController()
 
-        fetch('/measurement/type', {
+        fetch(process.env.REACT_APP_BACKEND_APP + '/measurement/type', {
             signal: controller.signal,
             headers: {
                 'Content-Type': 'application/json',

@@ -1,11 +1,4 @@
 import React, { useState } from "react";
-import crypto from "crypto";
-
-function sha256(input) {
-    const hash = crypto.createHash('sha256');
-    hash.update(input);
-    return hash.digest('hex');
-}
 
 function Login({ onLogin }) {
     const [username, setUsername] = useState("");
@@ -16,10 +9,11 @@ function Login({ onLogin }) {
         event.preventDefault();
 
         try {
-            fetch("/login", {
+            console.log(process.env.REACT_APP_BACKEND_APP);
+            fetch(process.env.REACT_APP_BACKEND_APP + "/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ username, password: sha256(password) }),
+                body: JSON.stringify({ username, password: password }),
             })
             .then((res) => {
                 if (res.status === 400) {

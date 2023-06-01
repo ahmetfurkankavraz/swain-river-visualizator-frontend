@@ -15,7 +15,7 @@ function MeasurementTable(props){
         const controller = new AbortController()
         if (clickedDevice){
             setIsLoading(true);
-            fetch('/measurement/' + clickedDevice, {
+            fetch(process.env.REACT_APP_BACKEND_APP + '/measurement/' + clickedDevice, {
                 signal: controller.signal,
                 headers: {
                     'Content-Type': 'application/json',
@@ -46,7 +46,7 @@ function MeasurementTable(props){
     }, [clickedDevice, isListChanged])
 
     const deleteRecord = async (measurementId) => {
-        await fetch("/measurement/" + measurementId, {
+        await fetch(process.env.REACT_APP_BACKEND_APP + "/measurement/" + measurementId, {
             method: "DELETE"
         })
         .then(res => {
@@ -80,7 +80,7 @@ function MeasurementTable(props){
                             <th>Date</th>
                             <th>Type</th>
                             <th>Value</th>
-                            <th>Delete</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -93,7 +93,7 @@ function MeasurementTable(props){
                                 <th>{measurement.value}</th>
                                 <th><button 
                                     className='general-button button-red'
-                                    onClick={() => deleteRecord(measurement._id)}>Click</button></th>
+                                    onClick={() => deleteRecord(measurement._id)}>Delete</button></th>
                             </tr>
                         ))}
                     </tbody>    

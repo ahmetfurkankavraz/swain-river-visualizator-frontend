@@ -47,7 +47,7 @@ function Interpolate({setLoggedOut, onLogout}) {
         setScaleList([0, 0, 0, 0, 0, 0]);
         const controller = new AbortController()
         if (selectedDate) {
-            fetch('/measurement/' + selectedDate + '/type', {
+            fetch(process.env.REACT_APP_BACKEND_APP + '/measurement/' + selectedDate + '/type', {
                 signal: controller.signal,
                 headers: {
                     'Content-Type': 'application/json',
@@ -84,7 +84,7 @@ function Interpolate({setLoggedOut, onLogout}) {
 
         setScaleList([0, 0, 0, 0, 0, 0]);
 
-        fetch('/measurement/catalog/' + selectedDate + '/' + selectedType, {
+        fetch(process.env.REACT_APP_BACKEND_APP + '/measurement/catalog/' + selectedDate + '/' + selectedType, {
             signal: controller.signal,
             headers: {
                 'Content-Type': 'application/json',
@@ -119,7 +119,7 @@ function Interpolate({setLoggedOut, onLogout}) {
         const controller = new AbortController()
         setMeasurements(null);
         if (selectedDate && selectedType) {
-            fetch('/measurement/' + selectedDate + '/' + selectedType, {
+            fetch(process.env.REACT_APP_BACKEND_APP + '/measurement/' + selectedDate + '/' + selectedType, {
                 signal: controller.signal,
                 headers: {
                     'Content-Type': 'application/json',
@@ -153,7 +153,7 @@ function Interpolate({setLoggedOut, onLogout}) {
         setInterpolatedRiver(null);
         if (selectedDate && selectedType) {
             setIsLoading(true);
-            fetch(`/interpolate/${selectedDate}/${selectedType}?${scaleList.map(scale => `scaleArray=${scale}`).join('&')}`, {
+            fetch(process.env.REACT_APP_BACKEND_APP + `/interpolate/${selectedDate}/${selectedType}?${scaleList.map(scale => `scaleArray=${scale}`).join('&')}`, {
                 signal: controller.signal,
                 headers: {
                   'Content-Type': 'application/json',
@@ -188,7 +188,7 @@ function Interpolate({setLoggedOut, onLogout}) {
         const token = localStorage.getItem('token');
         const controller = new AbortController()
 
-        fetch('/measurement/date', {
+        fetch(process.env.REACT_APP_BACKEND_APP + '/measurement/date', {
             signal: controller.signal,
             headers: {
                 'Content-Type': 'application/json',

@@ -17,7 +17,7 @@ function DeviceMarker(props){
         const token = localStorage.getItem('token');
 
         e.preventDefault();
-        await fetch("/measurement", {
+        await fetch(process.env.REACT_APP_BACKEND_APP + "/measurement", {
             signal: controller.signal,
             headers: {
                 'Content-Type': 'application/json',

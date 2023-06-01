@@ -29,7 +29,7 @@ function Maps(props){
     useEffect(() => {
         const controller = new AbortController()
         const token = localStorage.getItem('token');
-        fetch('/river', {
+        fetch(process.env.REACT_APP_BACKEND_APP + '/river', {
             signal: controller.signal,
             headers: {
                 'Content-Type': 'application/json',
@@ -61,7 +61,7 @@ function Maps(props){
         const token = localStorage.getItem('token');
         const controller = new AbortController()
 
-        fetch('/device', {
+        fetch(process.env.REACT_APP_BACKEND_APP + '/device', {
             signal: controller.signal,
             headers: {
                 'Content-Type': 'application/json',
